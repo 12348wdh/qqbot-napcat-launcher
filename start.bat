@@ -4,7 +4,7 @@ title QQ Bot Launcher (AstrBot + NapCat)
 cd /d "%~dp0"
 
 if not exist "config.bat" (
-  echo [!] config.bat not found.
+  echo [x] config.bat not found.
   echo     copy config.example.bat config.bat  then edit it.
   pause
   exit /b 1
@@ -33,7 +33,7 @@ ping -n 2 127.0.0.1 >nul
 goto wait_astrbot
 
 :astrbot_timeout
-echo       [!] timeout after ~90s, continuing anyway
+echo       [x] timeout after ~90s, continuing anyway
 goto astrbot_done
 
 :astrbot_ready
@@ -46,7 +46,7 @@ for /d %%D in ("%QQ_INSTALL_DIR%\*") do (
   if exist "%%D\resources\app\package.json" set "QAPP=%%D\resources\app"
 )
 if not defined QAPP (
-  echo       [!] QQ app dir not found under %QQ_INSTALL_DIR%
+  echo       [x] QQ app dir not found under %QQ_INSTALL_DIR%
   echo           set QQ_INSTALL_DIR in config.bat
 ) else (
   if not exist "%QAPP%\loadNapCat.js" (
@@ -58,10 +58,10 @@ if not defined QAPP (
 )
 
 echo [4/5] Start QQ / NapCat (quick login %QQ_ACCOUNT%) ...
-echo [5/5] Panel: http://127.0.0.1:6185   NapCat: http://127.0.0.1:6099/webui
+echo       Panel: http://127.0.0.1:6185   NapCat: http://127.0.0.1:6099/webui
 echo.
 call "%NAPCAT_DIR%\launcher-user.bat" -q %QQ_ACCOUNT%
 
 echo.
-echo [!] NapCat exited
+echo [x] NapCat exited
 pause

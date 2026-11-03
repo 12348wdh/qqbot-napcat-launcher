@@ -1,6 +1,12 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+if not exist "config.bat" (
+  echo [x] config.bat not found.
+  echo     copy config.example.bat config.bat  then edit it.
+  pause
+  exit /b 1
+)
 call "config.bat"
 
 set "ACCT="
