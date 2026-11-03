@@ -23,12 +23,12 @@ echo ============================================
 echo   QQ Bot Launcher  (AstrBot + NapCat)
 echo ============================================
 echo.
-echo [1/5] Stop existing QQ / NapCat ...
+echo [1/4] Stop existing QQ / NapCat ...
 taskkill /f /im QQ.exe >nul 2>&1
 taskkill /f /im NapCatWinBootMain.exe >nul 2>&1
 ping -n 3 127.0.0.1 >nul
 
-echo [2/5] Ensure AstrBot listens on 6199 ...
+echo [2/4] Ensure AstrBot listens on 6199 ...
 powershell -NoProfile -Command "if (-not (Get-NetTCPConnection -LocalPort 6199 -State Listen -ErrorAction SilentlyContinue)) { Start-Process '%ASTRBOT_EXE%' -WorkingDirectory (Split-Path '%ASTRBOT_EXE%') }" >nul 2>&1
 
 set /a n=0
@@ -48,10 +48,18 @@ goto astrbot_done
 echo       6199 is up
 
 :astrbot_done
-echo [3/5] Check loadNapCat.js ...
+echo [3/4] Check loadNapCat.js ...
 set "QAPP="
-for /d %%D in ("%QQ_INSTALL_DIR%\*") do (
-  if exist "%%D\resources\app\package.json" set "QAPP=%%D\resources\app"
+set "QQVER="
+rem prefer the version QQ reports as current, fall back to newest dir
+if exist "%QQ_INSTALL_DIR%\config.json" (
+  for /f "delims=" %%V in ('powershell -NoProfile -Command "(Get-Content '%QQ_INSTALL_DIR%\config.json' -Raw | ConvertFrom-Json).curVersion"') do set "QQVER=%%V"
+)
+if defined QQVER if exist "%QQ_INSTALL_DIR%\%QQVER%\resources\app\package.json" set "QAPP=%QQ_INSTALL_DIR%\%QQVER%\resources\app"
+if not defined QAPP (
+  for /d %%D in ("%QQ_INSTALL_DIR%\*") do (
+    if exist "%%D\resources\app\package.json" set "QAPP=%%D\resources\app"
+  )
 )
 if not defined QAPP (
   echo       [x] QQ app dir not found under %QQ_INSTALL_DIR%
@@ -65,7 +73,7 @@ if not defined QAPP (
   )
 )
 
-echo [4/5] Start QQ / NapCat (quick login %QQ_ACCOUNT%) ...
+echo [4/4] Start QQ / NapCat (quick login %QQ_ACCOUNT%) ...
 echo       Panel: http://127.0.0.1:6185   NapCat: http://127.0.0.1:6099/webui
 echo.
 call "%NAPCAT_DIR%\launcher-user.bat" -q %QQ_ACCOUNT%
