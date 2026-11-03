@@ -41,7 +41,7 @@ ping -n 2 127.0.0.1 >nul
 goto wait_astrbot
 
 :astrbot_timeout
-echo       [x] timeout after ~90s, continuing anyway
+echo       [x] timeout after ~60s, continuing anyway
 goto astrbot_done
 
 :astrbot_ready

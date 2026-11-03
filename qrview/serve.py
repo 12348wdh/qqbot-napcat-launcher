@@ -1,3 +1,16 @@
+"""Live QR viewer for NapCat.
+
+NapCat rewrites cache/qrcode.png every ~2 minutes while waiting for login.
+This server serves that file with no-store headers and an auto-refreshing page,
+so whatever the browser shows is the current code.
+
+    python qrview/serve.py
+
+Environment:
+    NAPCAT_QR    path to qrcode.png (default: D:\\NapCat\\app\\napcat\\cache\\qrcode.png)
+    QRVIEW_PORT  listen port (default: 8099)
+"""
+
 import http.server
 import os
 import socketserver
@@ -14,6 +27,8 @@ HTML = """<!doctype html>
 <div style="margin-top:16px;color:#666;font-size:14px">auto refresh every 2s</div>
 </body></html>""".encode("utf-8")
 
+MISSING = b"qrcode.png not found - check NAPCAT_QR and whether NapCat is waiting for login"
+
 
 class Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -21,10 +36,12 @@ class Handler(http.server.BaseHTTPRequestHandler):
             try:
                 with open(QR, "rb") as f:
                     data = f.read()
-            except Exception:
-                data = b""
-            self.send_response(200)
-            self.send_header("Content-Type", "image/png")
+                status = 200
+            except OSError:
+                data = MISSING
+                status = 404
+            self.send_response(status)
+            self.send_header("Content-Type", "image/png" if status == 200 else "text/plain; charset=utf-8")
             self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
             self.send_header("Pragma", "no-cache")
             self.send_header("Content-Length", str(len(data)))

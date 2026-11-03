@@ -9,6 +9,13 @@ if not exist "config.bat" (
 )
 call "config.bat"
 
+if not exist "%NAPCAT_DIR%\launcher-user.bat" (
+  echo [x] NapCat launcher not found: %NAPCAT_DIR%\launcher-user.bat
+  echo     set NAPCAT_DIR in config.bat
+  pause
+  exit /b 1
+)
+
 set "ACCT="
 set /p "ACCT=QQ account [default %QQ_ACCOUNT%]: "
 if "%ACCT%"=="" set "ACCT=%QQ_ACCOUNT%"

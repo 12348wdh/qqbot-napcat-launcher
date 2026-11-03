@@ -58,7 +58,11 @@ set "ASTRBOT_EXE=D:\AstrBot\astrbot-desktop-tauri.exe"
 start.bat
 ```
 
-流程：停残留进程 → 起 AstrBot → 轮询等 6199 → 补 `loadNapCat.js` → 起 QQ/NapCat 快速登录。
+流程：停残留进程 → 起 AstrBot → 轮询等 6199（最多 60 秒）→ 补 `loadNapCat.js` → 起 QQ/NapCat 快速登录。
+
+> 快速登录依赖 NapCat 缓存的登录态。缓存失效（换设备、长时间未登录）时会自动回落到二维码，二维码打印在当前控制台，同时存到 `cache\qrcode.png`。
+
+> `start.bat` 第一步是 `taskkill /f /im QQ.exe`，会关掉本机**所有** QQ 进程，包括你正在用的个人号。
 
 首次登录用 `login.bat`，可以输密码，也可以留空走二维码（二维码会打印在控制台，同时存到 `cache\qrcode.png`）。
 
@@ -111,7 +115,7 @@ NapCat 侧 `config\onebot11_<QQ号>.json`：
 | 反向 WS 一直重连 | 路径少 `/ws` 或 token 不匹配 | 检查 URL 与 AstrBot token |
 | 登录后立刻掉线 | 手机端切换了同一账号 | 换设备保持在线，或改用密码登录 |
 
-日志：NapCat 在 `config\napcat.json` 里把 `fileLog` 设为 `true`，日志写到 `logs\`。
+日志：把 `config\napcat.json` 和 `config\napcat_<QQ号>.json` 里的 `fileLog` 都设为 `true`（账号级配置会覆盖全局），日志写到 `logs\`。
 
 ## 目录
 
@@ -120,6 +124,9 @@ start.bat              一键启动（AstrBot + NapCat）
 login.bat              交互式登录（密码 / 二维码）
 config.example.bat     配置模板
 qrview/serve.py        自动刷新的二维码页面
+.gitattributes         行尾规则（*.bat 强制 CRLF）
+.gitignore             排除 config.bat / 日志
+LICENSE                MIT
 ```
 
 ## License
