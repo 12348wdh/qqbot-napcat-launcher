@@ -32,8 +32,8 @@ NapCat 作为 WS 客户端主动连 AstrBot，所以 **AstrBot 必须先监听 6
 |---|---|
 | Windows 10/11 | 脚本用 `powershell` 查端口，系统自带 |
 | QQ NT | 官方客户端，记录安装目录（默认 `E:\versions\<version>\resources\app`） |
-| NapCat.Shell.Windows.Node | 解压到本地，含 `launcher-user.bat` |
-| AstrBot | 桌面版或源码版，监听 6199 |
+| NapCat.Shell.Windows.Node | [releases](https://github.com/NapNeko/NapCatQQ/releases) 下载 `NapCat.Shell.Windows.Node.zip`，解压后用其中的 `launcher-user.bat` |
+| AstrBot | [AstrBotDevs/AstrBot](https://github.com/AstrBotDevs/AstrBot) 桌面版或源码版，监听 6199 |
 
 ## 配置
 

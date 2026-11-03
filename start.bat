@@ -11,6 +11,14 @@ if not exist "config.bat" (
 )
 call "config.bat"
 
+if not exist "%NAPCAT_DIR%\launcher-user.bat" (
+  echo [x] NapCat launcher not found: %NAPCAT_DIR%\launcher-user.bat
+  echo     set NAPCAT_DIR in config.bat
+  pause
+  exit /b 1
+)
+if not exist "%ASTRBOT_EXE%" echo [x] warning: AstrBot not found at %ASTRBOT_EXE%
+
 echo ============================================
 echo   QQ Bot Launcher  (AstrBot + NapCat)
 echo ============================================
